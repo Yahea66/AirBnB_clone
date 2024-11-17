@@ -1,11 +1,6 @@
-#!/usr/bin/python3
-"""
-This module defines the BaseModel class which serves as a base class for all other models in an AirBnB application.
-It includes methods for initialization, string representation, saving, and converting object data to a dictionary.
-"""
-
 import uuid
 from datetime import datetime
+from . import storage
 
 class BaseModel:
     """
@@ -42,6 +37,7 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = self.created_at
+            storage.new(self)
     
     def __str__(self):
         """
@@ -57,6 +53,7 @@ class BaseModel:
         Updates the  attribute to the current datetime whenever the instance is saved.
         """
         self.updated_at = datetime.now()
+        storage.save()
   
     def to_dict(self):
         """
