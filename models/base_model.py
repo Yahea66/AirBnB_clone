@@ -6,7 +6,7 @@ It includes methods for initialization, string representation, saving, and conve
 
 import uuid
 from datetime import datetime
-from . import storage
+import models 
 
 class BaseModel:
     """
@@ -43,7 +43,7 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = self.created_at
-            storage.new(self)
+            models.storage.new(self)
     
     def __str__(self):
         """
@@ -59,7 +59,7 @@ class BaseModel:
         Updates the  attribute to the current datetime whenever the instance is saved.
         """
         self.updated_at = datetime.now()
-        storage.save()
+        models.storage.save()
   
     def to_dict(self):
         """
@@ -70,7 +70,7 @@ class BaseModel:
                   and the addition of the class name.
         """
         dictionary = self.__dict__.copy()
-        dictionary["__class__"] = self.__class__.__name__  # Corrected typo from _class_ to __class__
+        dictionary["__class__"] = self.__class__.__name__
         dictionary["created_at"] = self.created_at.isoformat()
         dictionary["updated_at"] = self.updated_at.isoformat()
         return dictionary

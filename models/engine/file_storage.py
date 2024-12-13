@@ -6,6 +6,7 @@ and deserializes JSON file to instances.
 
 import json
 import os
+from models.base_model import BaseModel
 
 
 class FileStorage:
@@ -53,11 +54,8 @@ class FileStorage:
         """
         if os.path.exists(FileStorage.__file_path):
             with open(FileStorage.__file_path, 'r') as f:
-                objs = json.load(f)
-            FileStorage.__objects.clear()
-            for key, obj_data in objs.items():
-                cls_name = key.split('.')[0]
-                if cls_name in globals():
-                    cls = globals()[cls_name]
-                    obj = cls.from_dict(obj_data)
-                    FileStorage.__objects[key] = obj
+                objs_dict = json.load(f)
+                for obj in objs_dict.values():
+                    cls_name = obj["__class__"]
+                    del obj["__class__"]
+                    self.new(eval(cls_name)(**obj))
